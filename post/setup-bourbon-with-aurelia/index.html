@@ -1,0 +1,284 @@
+    <!DOCTYPE html>
+<html lang="en-us">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Sayem&#39;s Rants">
+		
+		<meta name="generator" content="Hugo 0.17" />
+		<title>Setup Bourbon with Aurelia &middot; Sayem&#39;s Rants</title>
+		<link rel="shortcut icon" href="http://afm-sayem.com/images/favicon.ico">
+		<link rel="stylesheet" href="http://afm-sayem.com/css/style.css">
+		<link rel="stylesheet" href="http://afm-sayem.com/css/highlight.css">
+		
+
+		
+		<link rel="stylesheet" href="http://afm-sayem.com/fontawesome/css/font-awesome.min.css">
+		
+
+		
+		<link href="http://afm-sayem.com/index.xml" rel="alternate" type="application/rss+xml" title="Sayem&#39;s Rants" />
+		
+
+		<meta property="og:title" content="Setup Bourbon with Aurelia" />
+<meta property="og:description" content="I &#9829; Bourbon. I &#9829; Aurelia.
+To use Bourbon with Aurelia, we will first create a project with aurelia-cli. Use scss as the preprocessor when the project asks for configuration values.
+Done? Now let&rsquo;s install bourbon and neat from npm.
+npm install bourbon bourbon-neat --save
+Go to the aurelia_project/tasks directory and open up process-css.js and add these lines
+import bourbon from &#39;bourbon&#39;; import neat from &#39;bourbon-neat&#39;;  Modify the ." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://afm-sayem.com/post/setup-bourbon-with-aurelia/" />
+
+
+<meta property="og:updated_time" content="2016-08-20T04:03:46-06:00"/>
+
+
+
+
+
+
+
+
+
+
+	    
+	    
+<meta itemprop="name" content="Setup Bourbon with Aurelia">
+<meta itemprop="description" content="I &#9829; Bourbon. I &#9829; Aurelia.
+To use Bourbon with Aurelia, we will first create a project with aurelia-cli. Use scss as the preprocessor when the project asks for configuration values.
+Done? Now let&rsquo;s install bourbon and neat from npm.
+npm install bourbon bourbon-neat --save
+Go to the aurelia_project/tasks directory and open up process-css.js and add these lines
+import bourbon from &#39;bourbon&#39;; import neat from &#39;bourbon-neat&#39;;  Modify the .">
+
+
+<meta itemprop="dateModified" content="2016-08-20T04:03:46-06:00" />
+<meta itemprop="wordCount" content="267">
+
+
+
+<meta itemprop="keywords" content="" />
+
+	    
+
+  <meta name="twitter:card" content="summary"/>
+
+
+
+<meta name="twitter:title" content="Setup Bourbon with Aurelia"/>
+<meta name="twitter:description" content="I &#9829; Bourbon. I &#9829; Aurelia.
+To use Bourbon with Aurelia, we will first create a project with aurelia-cli. Use scss as the preprocessor when the project asks for configuration values.
+Done? Now let&rsquo;s install bourbon and neat from npm.
+npm install bourbon bourbon-neat --save
+Go to the aurelia_project/tasks directory and open up process-css.js and add these lines
+import bourbon from &#39;bourbon&#39;; import neat from &#39;bourbon-neat&#39;;  Modify the ."/>
+
+
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='http://afm-sayem.com/'> <span class="arrow">←</span>Home</a>
+	
+
+	
+		<a href='http://afm-sayem.com/about'>About</a>
+	
+
+	
+	<a class="cta" href="http://afm-sayem.com/index.xml">Subscribe</a>
+	
+</nav>
+
+        <section id="wrapper">
+            <article class="post">
+                <header>
+                    <h1>Setup Bourbon with Aurelia</h1>
+                    <h2 class="headline">
+                    August 20, 2016 
+                    <br>
+                    
+                    </h2>
+                </header>
+                <section id="post-body">
+                    
+
+<p>I &#9829; <a href="http://bourbon.io">Bourbon</a>. I &#9829; <a href="http://aurelia.io">Aurelia</a>.</p>
+
+<p>To use Bourbon with Aurelia, we will first create a project with <a href="http://aurelia.io/hub.html#/doc/article/aurelia/framework/latest/the-aurelia-cli">aurelia-cli</a>. Use scss as the preprocessor when the project asks for configuration values.</p>
+
+<p>Done? Now let&rsquo;s install bourbon and neat from npm.</p>
+
+<p><code>npm install bourbon bourbon-neat --save</code></p>
+
+<p>Go to the <code>aurelia_project/tasks</code> directory and open up <code>process-css.js</code> and add these lines</p>
+
+<pre><code>import bourbon from 'bourbon';
+import neat from 'bourbon-neat';
+</code></pre>
+
+<p>Modify the <code>.pipe(sass().on('error', sass.logError))</code>
+line to the following:</p>
+
+<pre><code>    .pipe(sass({
+      includePaths: [].concat(bourbon.includePaths, neat.includePaths)
+    }).on('error', sass.logError))
+</code></pre>
+
+<p>Done! Let&rsquo;s test things out now shall we?</p>
+
+<p>Create app.scss in <code>src</code></p>
+
+<pre><code>@import &quot;bourbon&quot;;
+@import &quot;neat&quot;;
+
+section {
+  @include outer-container;
+  header { @include span-columns(3); }
+  section { @include span-columns(9); }
+}
+</code></pre>
+
+<p>Replace app.html to this</p>
+
+<pre><code>&lt;template&gt;
+  &lt;require from=&quot;./app.css&quot;&gt;&lt;/require&gt;
+  &lt;section&gt;
+    &lt;header&gt;What is it about?&lt;/header&gt;
+    &lt;section&gt;Neat is an open source semantic grid framework built with Sass…&lt;/section&gt;
+  &lt;/section&gt;
+  &lt;section&gt;
+    &lt;header&gt;Where do we go from here?&lt;/header&gt;
+    &lt;section&gt;Far&lt;/section&gt;
+  &lt;/section&gt;
+&lt;/template&gt;
+</code></pre>
+
+<p>Run the aurelia application and you should the contents organized in a grid.</p>
+
+<h4 id="bonus-bitters-and-how-to-structure-your-project">Bonus: Bitters and How to structure your project</h4>
+
+<p><a href="bitters.bourbon.io">Bitters</a> provides the scaffolding and structure for your <code>scss</code> files in your project.</p>
+
+<p>Install the bitters gem and run <code>bitter install</code> in your <code>src</code> directory. You&rsquo;ll see a folder named &lsquo;base&rsquo;(with contents) will be created. I usually rename <code>base</code> to <code>style</code> but it&rsquo;s a matter of personal taste.</p>
+
+<p>Now to start using the scaffolded styles, import <code>base.scss</code> from your <code>style</code>/<code>base</code> directory after the import of <code>bourbon</code> and <code>neat</code>.</p>
+
+<pre><code>@import &quot;bourbon&quot;;
+@import &quot;neat&quot;;
+@import &quot;style/base&quot;;
+</code></pre>
+
+<p>In all of your views/components style file, just require the <code>app.scss</code> and you will have all the mixins and sweet things from bourbon and neat.</p>
+
+<p>Neat! No?</p>
+
+                </section>
+            </article>
+            <footer id="post-meta" class="clearfix">
+                <a href="https://twitter.com/Your%20Twitter%20account">
+                        <img class="avatar" src="http://afm-sayem.com/images/avatar.png">
+                        <div>
+                            <span class="dark">Sayem&#39;s Rants</span>
+                            <span>I&#39;m an enthusiastic gopher.</span>
+                        </div>
+                    </a>
+                <section id="sharing">
+                    <a class="twitter" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fafm-sayem.com%2fpost%2fsetup-bourbon-with-aurelia%2f - Setup%20Bourbon%20with%20Aurelia by @Your%20Twitter%20account"><span class="icon-twitter"> Tweet</span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> Share</span>
+</a>
+
+                </section>
+            </footer>
+
+            
+
+            <ul id="post-list" class="archive readmore">
+    <h3>Read more</h3>
+    
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/write-apis-that-speak/">Write APIs that speak<aside class="dates">Oct 2</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/setup-bourbon-with-aurelia/">Setup Bourbon with Aurelia<aside class="dates">Aug 20</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/enforce-commit-message-convention/">Enforce Better Commit Messages<aside class="dates">Jul 12</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/standards/">Standards<aside class="dates">Jun 21</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/dvorak-and-vim/">Keyboarding: Dvorak and Vim<aside class="dates">Mar 12</aside></a>
+        </li>
+        
+   
+</ul>
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/afm-sayem">
+        <i class="fa fa-github"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.soundcloud.com/honkhonk">
+        <i class="fa fa-soundcloud"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © AFM Sayem
+    
+    </p>
+</footer>
+
+        </section>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://afm-sayem.com/js/main.js"></script>
+<script src="http://afm-sayem.com/js/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+    </body>
+</html>

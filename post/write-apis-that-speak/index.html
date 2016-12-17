@@ -1,0 +1,268 @@
+    <!DOCTYPE html>
+<html lang="en-us">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Sayem&#39;s Rants">
+		
+		<meta name="generator" content="Hugo 0.17" />
+		<title>Write APIs that speak &middot; Sayem&#39;s Rants</title>
+		<link rel="shortcut icon" href="http://afm-sayem.com/images/favicon.ico">
+		<link rel="stylesheet" href="http://afm-sayem.com/css/style.css">
+		<link rel="stylesheet" href="http://afm-sayem.com/css/highlight.css">
+		
+
+		
+		<link rel="stylesheet" href="http://afm-sayem.com/fontawesome/css/font-awesome.min.css">
+		
+
+		
+		<link href="http://afm-sayem.com/index.xml" rel="alternate" type="application/rss+xml" title="Sayem&#39;s Rants" />
+		
+
+		<meta property="og:title" content="Write APIs that speak" />
+<meta property="og:description" content="Over the course of past nine months, I have written quite a few RESTful APIs from scratch and have learned quite a bit in the process. I&rsquo;ll try to give a brief summary of what I learned.
+It&rsquo;s impossible to discuss web APIs without mentioning the new contender, GraphQL. I don&rsquo;t believe the criticsms on REST by GraphQL proponnents are just, though. REST is more unopinionated than GraphQL since it only prescribes the method of data and does not dictate how the communication must happen." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://afm-sayem.com/post/write-apis-that-speak/" />
+
+
+<meta property="og:updated_time" content="2016-10-02T17:09:14-05:00"/>
+
+
+
+
+
+
+
+
+
+
+	    
+	    
+<meta itemprop="name" content="Write APIs that speak">
+<meta itemprop="description" content="Over the course of past nine months, I have written quite a few RESTful APIs from scratch and have learned quite a bit in the process. I&rsquo;ll try to give a brief summary of what I learned.
+It&rsquo;s impossible to discuss web APIs without mentioning the new contender, GraphQL. I don&rsquo;t believe the criticsms on REST by GraphQL proponnents are just, though. REST is more unopinionated than GraphQL since it only prescribes the method of data and does not dictate how the communication must happen.">
+
+
+<meta itemprop="dateModified" content="2016-10-02T17:09:14-05:00" />
+<meta itemprop="wordCount" content="728">
+
+
+
+<meta itemprop="keywords" content="" />
+
+	    
+
+  <meta name="twitter:card" content="summary"/>
+
+
+
+<meta name="twitter:title" content="Write APIs that speak"/>
+<meta name="twitter:description" content="Over the course of past nine months, I have written quite a few RESTful APIs from scratch and have learned quite a bit in the process. I&rsquo;ll try to give a brief summary of what I learned.
+It&rsquo;s impossible to discuss web APIs without mentioning the new contender, GraphQL. I don&rsquo;t believe the criticsms on REST by GraphQL proponnents are just, though. REST is more unopinionated than GraphQL since it only prescribes the method of data and does not dictate how the communication must happen."/>
+
+
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='http://afm-sayem.com/'> <span class="arrow">←</span>Home</a>
+	
+
+	
+		<a href='http://afm-sayem.com/about'>About</a>
+	
+
+	
+	<a class="cta" href="http://afm-sayem.com/index.xml">Subscribe</a>
+	
+</nav>
+
+        <section id="wrapper">
+            <article class="post">
+                <header>
+                    <h1>Write APIs that speak</h1>
+                    <h2 class="headline">
+                    October 2, 2016 
+                    <br>
+                    
+                    </h2>
+                </header>
+                <section id="post-body">
+                    <p>Over the course of past nine months, I have written quite a few RESTful APIs from scratch and have learned quite a bit in the process. I&rsquo;ll try to give a brief summary of what I learned.</p>
+
+<p>It&rsquo;s impossible to discuss web APIs without mentioning the new contender, GraphQL. I don&rsquo;t believe the criticsms on REST by GraphQL proponnents are just, though. REST is more unopinionated than GraphQL since it only prescribes the method of data and does not dictate how the communication must happen. GraphQL can boast to have more features because the implementors have to conform to it&rsquo;s predefined data structure over HTTP, which enables it to do more out of the box. If we only introduce some structure around REST we will achieve a lot of the said benefits of GraphQL without subscribing to some of it&rsquo;s esoteric ideas.</p>
+
+<p>And this can be done if we can only rethink our usage of <strong>query parameters</strong>.</p>
+
+<p>Query parameters, although having the word <code>query</code> in it, does not have anything query like. The only operator it accepts is the equal operator, which limits it severely because the consumers have more needs than just equality check. I have seen people often resorting to defining special parameters that holds both an operation and column on which the data to be checked upon, like <code>maxAge</code> or <code>searchTitle</code>. If we can introduce more operators like greater than, less than etc on query parameters, we can do a whole lot more with the endpoints.</p>
+
+<p><strong>The first step in building a more expressive API is to build a contract around query parameters.</strong></p>
+
+<p>All the query parameters we send to our backend fall in one of the following buckets <a href='/post/write-apis-that-speak/#one'>[1]</a></p>
+
+<ol>
+<li><strong>filters</strong>: return data that satisfy some conditions</li>
+<li><strong>include</strong>: include some related data</li>
+<li><strong>page</strong>: used to limit the number of returned results</li>
+<li><strong>sort</strong>: order the data in ascending or descending order mentioned by this field</li>
+<li><strong>fields</strong>: return only the fields mentioned</li>
+</ol>
+
+<p>Let&rsquo;s talk about filters.</p>
+
+<p>If the client and server agrees to a specific format of query parameters, where the server accepts the operation type, operation and the value, then you add a lot to the query parameter vocabulary. For defining a parameter, instead of plain <code>column_name=value</code>, we can follow the following method <a href='/post/write-apis-that-speak/#two'>[2]</a>:</p>
+
+<p><code>where[column_name:operation]=value</code></p>
+
+<p>example:</p>
+
+<p><code>api.moviestore.com/movies?where[gross_income:lt]=100000&amp;where[released:gt]=20160503&amp;sort=-released</code></p>
+
+<p>In the above API call we are requesting for movies that have made less than 100,000 since May 03, 2016. Imagine how easy it is to understand from the backend what the api consumer is requesting.</p>
+
+<p>Following such method opens up a world of possibilities to the consumers and the api providers. You can do all the arithmatic, matching and containing operation on your data from client end without knowing arbitrary parameter names. You can do even custom filtering, for instance for searching in titles(full text search), you could define the word <code>search</code> as operation in the contract.Then in the backend you can decide what you want to do with it.</p>
+
+<p><code>api.moviestore.com/movies?where[title:search]=madmax</code></p>
+
+<p>For <code>include</code>, we can define a seperate array where we gather the related data to the current endpoint that the user want to be included.</p>
+
+<p><code>page</code> is an object that has two properties. One is <code>page[size]</code> and the other is <code>page[number]</code>.</p>
+
+<p><code>sort</code> is a string that takes the column name according to which the data must be sorted. Takes a dash before the value to indicate descending order.</p>
+
+<p>Here&rsquo;s how a complete example would look like,</p>
+
+<p><code>api.moviestore.com/movies?where[title:search]=max&amp;where[gross_income:lt]=10000&amp;include=[actors]&amp;page[size]=10&amp;page[number]=0&amp;sort=-released</code></p>
+
+<p>What more can we do with it?</p>
+
+<p><strong>What if we taught our backend to build queries from query parameters?</strong>.</p>
+
+<p>Look closer:</p>
+
+<p><em>filters</em> is WHERE </br>
+<em>include</em> is JOIN </br>
+<em>page</em> is LIMIT </br>
+<em>sort</em> is ORDER </br>
+<em>fields</em> is SELECT</p>
+
+<p>You can write a pretty powerful query constructor from the above data that will enable the client to speak with the database. The client can request and conversate with the API according to it&rsquo;s need without explicit backend logic doing that for it. Of course you should never trust client sent data and beware of SQL injection so make sure the query you are executing is safe.</p>
+
+<p>In my <a href="#">next post</a>, I&rsquo;ll write about how we can implement such API with the help of <a href="https://github.com/Vincit/objection.js/">objection-js</a> and an excellent plugin to it, <a href="https://github.com/Vincit/objection-find/">objection-find</a>.</p>
+
+<p></br>
+</hr>
+<small><a name="one"></a>1. I picked up query categorizing from <a href="https://github.com/TryGhost/Ghost/issues/5463">this discussion</a> in <a href="https://ghost.io">Ghost</a>. Ghost also has it&rsquo;s own filter query language called <a href="https://github.com/TryGhost/GQL">gql</a>.</small></p>
+
+<p><small><a name="two"></a>2. The filter language has been picked up verbatim from <a href="https://github.com/TryGhost/Ghost/issues/5463">objection-find</a></a></small></p>
+
+                </section>
+            </article>
+            <footer id="post-meta" class="clearfix">
+                <a href="https://twitter.com/Your%20Twitter%20account">
+                        <img class="avatar" src="http://afm-sayem.com/images/avatar.png">
+                        <div>
+                            <span class="dark">Sayem&#39;s Rants</span>
+                            <span>I&#39;m an enthusiastic gopher.</span>
+                        </div>
+                    </a>
+                <section id="sharing">
+                    <a class="twitter" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fafm-sayem.com%2fpost%2fwrite-apis-that-speak%2f - Write%20APIs%20that%20speak by @Your%20Twitter%20account"><span class="icon-twitter"> Tweet</span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> Share</span>
+</a>
+
+                </section>
+            </footer>
+
+            
+
+            <ul id="post-list" class="archive readmore">
+    <h3>Read more</h3>
+    
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/write-apis-that-speak/">Write APIs that speak<aside class="dates">Oct 2</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/setup-bourbon-with-aurelia/">Setup Bourbon with Aurelia<aside class="dates">Aug 20</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/enforce-commit-message-convention/">Enforce Better Commit Messages<aside class="dates">Jul 12</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/standards/">Standards<aside class="dates">Jun 21</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/dvorak-and-vim/">Keyboarding: Dvorak and Vim<aside class="dates">Mar 12</aside></a>
+        </li>
+        
+   
+</ul>
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/afm-sayem">
+        <i class="fa fa-github"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.soundcloud.com/honkhonk">
+        <i class="fa fa-soundcloud"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © AFM Sayem
+    
+    </p>
+</footer>
+
+        </section>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://afm-sayem.com/js/main.js"></script>
+<script src="http://afm-sayem.com/js/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+    </body>
+</html>

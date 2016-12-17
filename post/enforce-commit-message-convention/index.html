@@ -1,0 +1,229 @@
+    <!DOCTYPE html>
+<html lang="en-us">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<meta name="author" content="Sayem&#39;s Rants">
+		
+		<meta name="generator" content="Hugo 0.17" />
+		<title>Enforce Better Commit Messages &middot; Sayem&#39;s Rants</title>
+		<link rel="shortcut icon" href="http://afm-sayem.com/images/favicon.ico">
+		<link rel="stylesheet" href="http://afm-sayem.com/css/style.css">
+		<link rel="stylesheet" href="http://afm-sayem.com/css/highlight.css">
+		
+
+		
+		<link rel="stylesheet" href="http://afm-sayem.com/fontawesome/css/font-awesome.min.css">
+		
+
+		
+		<link href="http://afm-sayem.com/index.xml" rel="alternate" type="application/rss+xml" title="Sayem&#39;s Rants" />
+		
+
+		<meta property="og:title" content="Enforce Better Commit Messages" />
+<meta property="og:description" content="&ldquo;minor fix&rdquo; - Lucifer
+ One of the common feedbacks I used to get during my early days of software development days were how to communicate my changes with my collegues with good commit messages. There&rsquo;s no rule out there how to write a commit message, but there are quite a few conventions out there. Some prefer writing the changes in past tense, some in present tense. Some mention the ticket number in their commit message, some avoid doing that and instead stick to scope of the changes." />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="http://afm-sayem.com/post/enforce-commit-message-convention/" />
+
+
+<meta property="og:updated_time" content="2016-07-12T04:05:25-06:00"/>
+
+
+
+
+
+
+
+
+
+
+	    
+	    
+<meta itemprop="name" content="Enforce Better Commit Messages">
+<meta itemprop="description" content="&ldquo;minor fix&rdquo; - Lucifer
+ One of the common feedbacks I used to get during my early days of software development days were how to communicate my changes with my collegues with good commit messages. There&rsquo;s no rule out there how to write a commit message, but there are quite a few conventions out there. Some prefer writing the changes in past tense, some in present tense. Some mention the ticket number in their commit message, some avoid doing that and instead stick to scope of the changes.">
+
+
+<meta itemprop="dateModified" content="2016-07-12T04:05:25-06:00" />
+<meta itemprop="wordCount" content="433">
+
+
+
+<meta itemprop="keywords" content="" />
+
+	    
+
+  <meta name="twitter:card" content="summary"/>
+
+
+
+<meta name="twitter:title" content="Enforce Better Commit Messages"/>
+<meta name="twitter:description" content="&ldquo;minor fix&rdquo; - Lucifer
+ One of the common feedbacks I used to get during my early days of software development days were how to communicate my changes with my collegues with good commit messages. There&rsquo;s no rule out there how to write a commit message, but there are quite a few conventions out there. Some prefer writing the changes in past tense, some in present tense. Some mention the ticket number in their commit message, some avoid doing that and instead stick to scope of the changes."/>
+
+
+
+	</head>
+
+    <body>
+       <nav class="main-nav">
+	
+	
+		<a href='http://afm-sayem.com/'> <span class="arrow">←</span>Home</a>
+	
+
+	
+		<a href='http://afm-sayem.com/about'>About</a>
+	
+
+	
+	<a class="cta" href="http://afm-sayem.com/index.xml">Subscribe</a>
+	
+</nav>
+
+        <section id="wrapper">
+            <article class="post">
+                <header>
+                    <h1>Enforce Better Commit Messages</h1>
+                    <h2 class="headline">
+                    July 12, 2016 
+                    <br>
+                    
+                    </h2>
+                </header>
+                <section id="post-body">
+                    <blockquote>
+<p>&ldquo;minor fix&rdquo; - Lucifer</p>
+</blockquote>
+
+<p>One of the common feedbacks I used to get during my early days of software development days were how to communicate my changes with my collegues with good commit messages. There&rsquo;s no rule out there how to write a commit message, but there are quite a few conventions out there. Some prefer writing the changes in past tense, some in present tense. Some mention the ticket number in their commit message, some avoid doing that and instead stick to scope of the changes. Some projects(that have a solo contributor), don&rsquo;t use an issue tracker until late in the project and have &ldquo;minor changes&rdquo; or &ldquo;new feature&rdquo; written all over the repo.</p>
+
+<p>Also, I believe having a guideline takes a this mental blockage off the dev from thinking how to write a message. If you have ever found yourself backspacing a lot while writing a commit message you know what I&rsquo;m talking about.</p>
+
+<p>There are two steps to get rid of bikeshedding around commit messages.</p>
+
+<ol>
+<li>Pick a convention</li>
+<li>Enforce it</li>
+</ol>
+
+<p>One simple way to get started on a convention is to look at the source code of various open source projects and observe the rules they follow. I loved how <a href="https://github.com/aurelia/framework">Aurelia</a> manages it&rsquo;s commits and grouped commits in several categories and used it in some of my projects. Take a look at their <a href="https://github.com/DurandalProject/about/blob/master/CONTRIBUTING.md#commit">commit message guidelines.</a></p>
+
+<blockquote>
+<p>&ldquo;feat(init): let there be light&rdquo; - God</p>
+
+<p>&ldquo;refactor(YEAR-2049): cleanup some genes causing cancer&rdquo; - Human</p>
+</blockquote>
+
+<p>To enforce a convention, <a href="https://git-scm.com/docs/githooks">git hook</a> is your friend. Git has this hooking mechanism that lets you hook into the lifecycle of various events, like pulling, pushing, commiting etc. In this case, we can hook into gits&rsquo; <code>commit-msg</code> hook to enforce the writer of the commit to follow the convention we agreed upon. The <code>commit-msg</code> hook is a simple shell script that executes before the users changes are committed. It recieves the commit message that the user entered and may accept or reject the changes submitted by the user based on the content of the message. I use a very simple script that alerts the user everytime she commits without following the conventions of the Aurelia&rsquo;s commit message guidelines.</p>
+
+<p>Copy <a href="https://gist.github.com/afm-sayem/2cb8343d92f1415e64b90e1ba7cea35e#file-commit-msg">the script</a> to your projects <code>.git/hooks</code> directory(the file name has to be <code>commit-msg</code>) and try committing something with &ldquo;Made a few changes&rdquo; as the message and watch it get rejected. If it&rsquo;s still letting the commit through then make sure that the <code>commit-msg</code> script has execute permission.</p>
+
+<p>If you want all your future projects to have this hook automatically in their repos, several solutions arelisted in <a href="http://stackoverflow.com/questions/2293498/git-commit-hooks-global-settings">this stackoverflow question</a>.</p>
+
+                </section>
+            </article>
+            <footer id="post-meta" class="clearfix">
+                <a href="https://twitter.com/Your%20Twitter%20account">
+                        <img class="avatar" src="http://afm-sayem.com/images/avatar.png">
+                        <div>
+                            <span class="dark">Sayem&#39;s Rants</span>
+                            <span>I&#39;m an enthusiastic gopher.</span>
+                        </div>
+                    </a>
+                <section id="sharing">
+                    <a class="twitter" href="https://twitter.com/intent/tweet?text=http%3a%2f%2fafm-sayem.com%2fpost%2fenforce-commit-message-convention%2f - Enforce%20Better%20Commit%20Messages by @Your%20Twitter%20account"><span class="icon-twitter"> Tweet</span></a>
+
+<a class="facebook" href="#" onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"><span class="icon-facebook-rect"> Share</span>
+</a>
+
+                </section>
+            </footer>
+
+            
+
+            <ul id="post-list" class="archive readmore">
+    <h3>Read more</h3>
+    
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/write-apis-that-speak/">Write APIs that speak<aside class="dates">Oct 2</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/setup-bourbon-with-aurelia/">Setup Bourbon with Aurelia<aside class="dates">Aug 20</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/enforce-commit-message-convention/">Enforce Better Commit Messages<aside class="dates">Jul 12</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/standards/">Standards<aside class="dates">Jun 21</aside></a>
+        </li>
+        
+   
+    
+        
+        <li>
+            <a href="http://afm-sayem.com/post/dvorak-and-vim/">Keyboarding: Dvorak and Vim<aside class="dates">Mar 12</aside></a>
+        </li>
+        
+   
+</ul>
+            <footer id="footer">
+    
+        <div id="social">
+
+	
+	
+    <a class="symbol" href="https://www.github.com/afm-sayem">
+        <i class="fa fa-github"></i>
+    </a>
+    
+    <a class="symbol" href="https://www.soundcloud.com/honkhonk">
+        <i class="fa fa-soundcloud"></i>
+    </a>
+    
+
+
+</div>
+
+    
+    <p class="small">
+    
+        © AFM Sayem
+    
+    </p>
+</footer>
+
+        </section>
+
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<script src="http://afm-sayem.com/js/main.js"></script>
+<script src="http://afm-sayem.com/js/highlight.js"></script>
+<script>hljs.initHighlightingOnLoad();</script>
+
+
+
+
+
+    </body>
+</html>

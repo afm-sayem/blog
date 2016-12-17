@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  
+  <url>
+    <loc>http://afm-sayem.com/</loc>
+    <lastmod>2016-10-02T17:09:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://afm-sayem.com/post/write-apis-that-speak/</loc>
+    <lastmod>2016-10-02T17:09:14-05:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://afm-sayem.com/post/setup-bourbon-with-aurelia/</loc>
+    <lastmod>2016-08-20T04:03:46-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://afm-sayem.com/post/enforce-commit-message-convention/</loc>
+    <lastmod>2016-07-12T04:05:25-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://afm-sayem.com/post/standards/</loc>
+    <lastmod>2016-06-21T04:03:46-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://afm-sayem.com/post/dvorak-and-vim/</loc>
+    <lastmod>2016-03-12T04:05:25-06:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>http://afm-sayem.com/about/</loc>
+    <lastmod>2015-06-20T14:02:37+02:00</lastmod>
+  </url>
+  
+</urlset>

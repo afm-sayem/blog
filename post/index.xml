@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Post-rsses on Sayem&#39;s Rants</title>
+    <link>http://afm-sayem.com/post/index.xml</link>
+    <description>Recent content in Post-rsses on Sayem&#39;s Rants</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-us</language>
+    <copyright>© AFM Sayem</copyright>
+    <lastBuildDate>Sun, 02 Oct 2016 17:09:14 -0500</lastBuildDate>
+    <atom:link href="http://afm-sayem.com/post/index.xml" rel="self" type="application/rss+xml" />
+    
+    <item>
+      <title>Write APIs that speak</title>
+      <link>http://afm-sayem.com/post/write-apis-that-speak/</link>
+      <pubDate>Sun, 02 Oct 2016 17:09:14 -0500</pubDate>
+      
+      <guid>http://afm-sayem.com/post/write-apis-that-speak/</guid>
+      <description>&lt;p&gt;Over the course of past nine months, I have written quite a few RESTful APIs from scratch and have learned quite a bit in the process. I&amp;rsquo;ll try to give a brief summary of what I learned.&lt;/p&gt;
+
+&lt;p&gt;It&amp;rsquo;s impossible to discuss web APIs without mentioning the new contender, GraphQL. I don&amp;rsquo;t believe the criticsms on REST by GraphQL proponnents are just, though. REST is more unopinionated than GraphQL since it only prescribes the method of data and does not dictate how the communication must happen. GraphQL can boast to have more features because the implementors have to conform to it&amp;rsquo;s predefined data structure over HTTP, which enables it to do more out of the box. If we only introduce some structure around REST we will achieve a lot of the said benefits of GraphQL without subscribing to some of it&amp;rsquo;s esoteric ideas.&lt;/p&gt;
+
+&lt;p&gt;And this can be done if we can only rethink our usage of &lt;strong&gt;query parameters&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Query parameters, although having the word &lt;code&gt;query&lt;/code&gt; in it, does not have anything query like. The only operator it accepts is the equal operator, which limits it severely because the consumers have more needs than just equality check. I have seen people often resorting to defining special parameters that holds both an operation and column on which the data to be checked upon, like &lt;code&gt;maxAge&lt;/code&gt; or &lt;code&gt;searchTitle&lt;/code&gt;. If we can introduce more operators like greater than, less than etc on query parameters, we can do a whole lot more with the endpoints.&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;The first step in building a more expressive API is to build a contract around query parameters.&lt;/strong&gt;&lt;/p&gt;
+
+&lt;p&gt;All the query parameters we send to our backend fall in one of the following buckets &lt;a href=&#39;http://afm-sayem.com/post/write-apis-that-speak/#one&#39;&gt;[1]&lt;/a&gt;&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;&lt;strong&gt;filters&lt;/strong&gt;: return data that satisfy some conditions&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;include&lt;/strong&gt;: include some related data&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;page&lt;/strong&gt;: used to limit the number of returned results&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;sort&lt;/strong&gt;: order the data in ascending or descending order mentioned by this field&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;fields&lt;/strong&gt;: return only the fields mentioned&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;Let&amp;rsquo;s talk about filters.&lt;/p&gt;
+
+&lt;p&gt;If the client and server agrees to a specific format of query parameters, where the server accepts the operation type, operation and the value, then you add a lot to the query parameter vocabulary. For defining a parameter, instead of plain &lt;code&gt;column_name=value&lt;/code&gt;, we can follow the following method &lt;a href=&#39;http://afm-sayem.com/post/write-apis-that-speak/#two&#39;&gt;[2]&lt;/a&gt;:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;where[column_name:operation]=value&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;example:&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;api.moviestore.com/movies?where[gross_income:lt]=100000&amp;amp;where[released:gt]=20160503&amp;amp;sort=-released&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;In the above API call we are requesting for movies that have made less than 100,000 since May 03, 2016. Imagine how easy it is to understand from the backend what the api consumer is requesting.&lt;/p&gt;
+
+&lt;p&gt;Following such method opens up a world of possibilities to the consumers and the api providers. You can do all the arithmatic, matching and containing operation on your data from client end without knowing arbitrary parameter names. You can do even custom filtering, for instance for searching in titles(full text search), you could define the word &lt;code&gt;search&lt;/code&gt; as operation in the contract.Then in the backend you can decide what you want to do with it.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;api.moviestore.com/movies?where[title:search]=madmax&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;For &lt;code&gt;include&lt;/code&gt;, we can define a seperate array where we gather the related data to the current endpoint that the user want to be included.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;page&lt;/code&gt; is an object that has two properties. One is &lt;code&gt;page[size]&lt;/code&gt; and the other is &lt;code&gt;page[number]&lt;/code&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;sort&lt;/code&gt; is a string that takes the column name according to which the data must be sorted. Takes a dash before the value to indicate descending order.&lt;/p&gt;
+
+&lt;p&gt;Here&amp;rsquo;s how a complete example would look like,&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;api.moviestore.com/movies?where[title:search]=max&amp;amp;where[gross_income:lt]=10000&amp;amp;include=[actors]&amp;amp;page[size]=10&amp;amp;page[number]=0&amp;amp;sort=-released&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;What more can we do with it?&lt;/p&gt;
+
+&lt;p&gt;&lt;strong&gt;What if we taught our backend to build queries from query parameters?&lt;/strong&gt;.&lt;/p&gt;
+
+&lt;p&gt;Look closer:&lt;/p&gt;
+
+&lt;p&gt;&lt;em&gt;filters&lt;/em&gt; is WHERE &lt;/br&gt;
+&lt;em&gt;include&lt;/em&gt; is JOIN &lt;/br&gt;
+&lt;em&gt;page&lt;/em&gt; is LIMIT &lt;/br&gt;
+&lt;em&gt;sort&lt;/em&gt; is ORDER &lt;/br&gt;
+&lt;em&gt;fields&lt;/em&gt; is SELECT&lt;/p&gt;
+
+&lt;p&gt;You can write a pretty powerful query constructor from the above data that will enable the client to speak with the database. The client can request and conversate with the API according to it&amp;rsquo;s need without explicit backend logic doing that for it. Of course you should never trust client sent data and beware of SQL injection so make sure the query you are executing is safe.&lt;/p&gt;
+
+&lt;p&gt;In my &lt;a href=&#34;#&#34;&gt;next post&lt;/a&gt;, I&amp;rsquo;ll write about how we can implement such API with the help of &lt;a href=&#34;https://github.com/Vincit/objection.js/&#34;&gt;objection-js&lt;/a&gt; and an excellent plugin to it, &lt;a href=&#34;https://github.com/Vincit/objection-find/&#34;&gt;objection-find&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;&lt;/br&gt;
+&lt;/hr&gt;
+&lt;small&gt;&lt;a name=&#34;one&#34;&gt;&lt;/a&gt;1. I picked up query categorizing from &lt;a href=&#34;https://github.com/TryGhost/Ghost/issues/5463&#34;&gt;this discussion&lt;/a&gt; in &lt;a href=&#34;https://ghost.io&#34;&gt;Ghost&lt;/a&gt;. Ghost also has it&amp;rsquo;s own filter query language called &lt;a href=&#34;https://github.com/TryGhost/GQL&#34;&gt;gql&lt;/a&gt;.&lt;/small&gt;&lt;/p&gt;
+
+&lt;p&gt;&lt;small&gt;&lt;a name=&#34;two&#34;&gt;&lt;/a&gt;2. The filter language has been picked up verbatim from &lt;a href=&#34;https://github.com/TryGhost/Ghost/issues/5463&#34;&gt;objection-find&lt;/a&gt;&lt;/a&gt;&lt;/small&gt;&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Setup Bourbon with Aurelia</title>
+      <link>http://afm-sayem.com/post/setup-bourbon-with-aurelia/</link>
+      <pubDate>Sat, 20 Aug 2016 04:03:46 -0600</pubDate>
+      
+      <guid>http://afm-sayem.com/post/setup-bourbon-with-aurelia/</guid>
+      <description>
+
+&lt;p&gt;I &amp;#9829; &lt;a href=&#34;http://bourbon.io&#34;&gt;Bourbon&lt;/a&gt;. I &amp;#9829; &lt;a href=&#34;http://aurelia.io&#34;&gt;Aurelia&lt;/a&gt;.&lt;/p&gt;
+
+&lt;p&gt;To use Bourbon with Aurelia, we will first create a project with &lt;a href=&#34;http://aurelia.io/hub.html#/doc/article/aurelia/framework/latest/the-aurelia-cli&#34;&gt;aurelia-cli&lt;/a&gt;. Use scss as the preprocessor when the project asks for configuration values.&lt;/p&gt;
+
+&lt;p&gt;Done? Now let&amp;rsquo;s install bourbon and neat from npm.&lt;/p&gt;
+
+&lt;p&gt;&lt;code&gt;npm install bourbon bourbon-neat --save&lt;/code&gt;&lt;/p&gt;
+
+&lt;p&gt;Go to the &lt;code&gt;aurelia_project/tasks&lt;/code&gt; directory and open up &lt;code&gt;process-css.js&lt;/code&gt; and add these lines&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;import bourbon from &#39;bourbon&#39;;
+import neat from &#39;bourbon-neat&#39;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Modify the &lt;code&gt;.pipe(sass().on(&#39;error&#39;, sass.logError))&lt;/code&gt;
+line to the following:&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;    .pipe(sass({
+      includePaths: [].concat(bourbon.includePaths, neat.includePaths)
+    }).on(&#39;error&#39;, sass.logError))
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Done! Let&amp;rsquo;s test things out now shall we?&lt;/p&gt;
+
+&lt;p&gt;Create app.scss in &lt;code&gt;src&lt;/code&gt;&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@import &amp;quot;bourbon&amp;quot;;
+@import &amp;quot;neat&amp;quot;;
+
+section {
+  @include outer-container;
+  header { @include span-columns(3); }
+  section { @include span-columns(9); }
+}
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Replace app.html to this&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;&amp;lt;template&amp;gt;
+  &amp;lt;require from=&amp;quot;./app.css&amp;quot;&amp;gt;&amp;lt;/require&amp;gt;
+  &amp;lt;section&amp;gt;
+    &amp;lt;header&amp;gt;What is it about?&amp;lt;/header&amp;gt;
+    &amp;lt;section&amp;gt;Neat is an open source semantic grid framework built with Sass…&amp;lt;/section&amp;gt;
+  &amp;lt;/section&amp;gt;
+  &amp;lt;section&amp;gt;
+    &amp;lt;header&amp;gt;Where do we go from here?&amp;lt;/header&amp;gt;
+    &amp;lt;section&amp;gt;Far&amp;lt;/section&amp;gt;
+  &amp;lt;/section&amp;gt;
+&amp;lt;/template&amp;gt;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;Run the aurelia application and you should the contents organized in a grid.&lt;/p&gt;
+
+&lt;h4 id=&#34;bonus-bitters-and-how-to-structure-your-project&#34;&gt;Bonus: Bitters and How to structure your project&lt;/h4&gt;
+
+&lt;p&gt;&lt;a href=&#34;bitters.bourbon.io&#34;&gt;Bitters&lt;/a&gt; provides the scaffolding and structure for your &lt;code&gt;scss&lt;/code&gt; files in your project.&lt;/p&gt;
+
+&lt;p&gt;Install the bitters gem and run &lt;code&gt;bitter install&lt;/code&gt; in your &lt;code&gt;src&lt;/code&gt; directory. You&amp;rsquo;ll see a folder named &amp;lsquo;base&amp;rsquo;(with contents) will be created. I usually rename &lt;code&gt;base&lt;/code&gt; to &lt;code&gt;style&lt;/code&gt; but it&amp;rsquo;s a matter of personal taste.&lt;/p&gt;
+
+&lt;p&gt;Now to start using the scaffolded styles, import &lt;code&gt;base.scss&lt;/code&gt; from your &lt;code&gt;style&lt;/code&gt;/&lt;code&gt;base&lt;/code&gt; directory after the import of &lt;code&gt;bourbon&lt;/code&gt; and &lt;code&gt;neat&lt;/code&gt;.&lt;/p&gt;
+
+&lt;pre&gt;&lt;code&gt;@import &amp;quot;bourbon&amp;quot;;
+@import &amp;quot;neat&amp;quot;;
+@import &amp;quot;style/base&amp;quot;;
+&lt;/code&gt;&lt;/pre&gt;
+
+&lt;p&gt;In all of your views/components style file, just require the &lt;code&gt;app.scss&lt;/code&gt; and you will have all the mixins and sweet things from bourbon and neat.&lt;/p&gt;
+
+&lt;p&gt;Neat! No?&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Enforce Better Commit Messages</title>
+      <link>http://afm-sayem.com/post/enforce-commit-message-convention/</link>
+      <pubDate>Tue, 12 Jul 2016 04:05:25 -0600</pubDate>
+      
+      <guid>http://afm-sayem.com/post/enforce-commit-message-convention/</guid>
+      <description>&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;minor fix&amp;rdquo; - Lucifer&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;One of the common feedbacks I used to get during my early days of software development days were how to communicate my changes with my collegues with good commit messages. There&amp;rsquo;s no rule out there how to write a commit message, but there are quite a few conventions out there. Some prefer writing the changes in past tense, some in present tense. Some mention the ticket number in their commit message, some avoid doing that and instead stick to scope of the changes. Some projects(that have a solo contributor), don&amp;rsquo;t use an issue tracker until late in the project and have &amp;ldquo;minor changes&amp;rdquo; or &amp;ldquo;new feature&amp;rdquo; written all over the repo.&lt;/p&gt;
+
+&lt;p&gt;Also, I believe having a guideline takes a this mental blockage off the dev from thinking how to write a message. If you have ever found yourself backspacing a lot while writing a commit message you know what I&amp;rsquo;m talking about.&lt;/p&gt;
+
+&lt;p&gt;There are two steps to get rid of bikeshedding around commit messages.&lt;/p&gt;
+
+&lt;ol&gt;
+&lt;li&gt;Pick a convention&lt;/li&gt;
+&lt;li&gt;Enforce it&lt;/li&gt;
+&lt;/ol&gt;
+
+&lt;p&gt;One simple way to get started on a convention is to look at the source code of various open source projects and observe the rules they follow. I loved how &lt;a href=&#34;https://github.com/aurelia/framework&#34;&gt;Aurelia&lt;/a&gt; manages it&amp;rsquo;s commits and grouped commits in several categories and used it in some of my projects. Take a look at their &lt;a href=&#34;https://github.com/DurandalProject/about/blob/master/CONTRIBUTING.md#commit&#34;&gt;commit message guidelines.&lt;/a&gt;&lt;/p&gt;
+
+&lt;blockquote&gt;
+&lt;p&gt;&amp;ldquo;feat(init): let there be light&amp;rdquo; - God&lt;/p&gt;
+
+&lt;p&gt;&amp;ldquo;refactor(YEAR-2049): cleanup some genes causing cancer&amp;rdquo; - Human&lt;/p&gt;
+&lt;/blockquote&gt;
+
+&lt;p&gt;To enforce a convention, &lt;a href=&#34;https://git-scm.com/docs/githooks&#34;&gt;git hook&lt;/a&gt; is your friend. Git has this hooking mechanism that lets you hook into the lifecycle of various events, like pulling, pushing, commiting etc. In this case, we can hook into gits&amp;rsquo; &lt;code&gt;commit-msg&lt;/code&gt; hook to enforce the writer of the commit to follow the convention we agreed upon. The &lt;code&gt;commit-msg&lt;/code&gt; hook is a simple shell script that executes before the users changes are committed. It recieves the commit message that the user entered and may accept or reject the changes submitted by the user based on the content of the message. I use a very simple script that alerts the user everytime she commits without following the conventions of the Aurelia&amp;rsquo;s commit message guidelines.&lt;/p&gt;
+
+&lt;p&gt;Copy &lt;a href=&#34;https://gist.github.com/afm-sayem/2cb8343d92f1415e64b90e1ba7cea35e#file-commit-msg&#34;&gt;the script&lt;/a&gt; to your projects &lt;code&gt;.git/hooks&lt;/code&gt; directory(the file name has to be &lt;code&gt;commit-msg&lt;/code&gt;) and try committing something with &amp;ldquo;Made a few changes&amp;rdquo; as the message and watch it get rejected. If it&amp;rsquo;s still letting the commit through then make sure that the &lt;code&gt;commit-msg&lt;/code&gt; script has execute permission.&lt;/p&gt;
+
+&lt;p&gt;If you want all your future projects to have this hook automatically in their repos, several solutions arelisted in &lt;a href=&#34;http://stackoverflow.com/questions/2293498/git-commit-hooks-global-settings&#34;&gt;this stackoverflow question&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Standards</title>
+      <link>http://afm-sayem.com/post/standards/</link>
+      <pubDate>Tue, 21 Jun 2016 04:03:46 -0600</pubDate>
+      
+      <guid>http://afm-sayem.com/post/standards/</guid>
+      <description>&lt;p&gt;Standards are beautiful. Standards let us build on top of each other without worrying too much about details underneath. The biggest example of standard is probably human language, how we all agreed to make specific sounds so that we&amp;rsquo;ll be able to express ourselves to each other.&lt;/p&gt;
+
+&lt;p&gt;I like to think in standards. Whenever I&amp;rsquo;m creating something, I worry a lot thinking how can someone else leverage the work that I&amp;rsquo;m working. I think this way of thinking and building the little programs we build not only help others, but ourselves more because we no longer need to worry about integrations. Integrations are a given when everyone agrees. The world moves on.&lt;/p&gt;
+
+&lt;p&gt;I have built a boilerplate application for those who are building APIs from scratch. If I had to pick out one thing that I had most fun in building this was how I learned to build on top of standards. One exampleis how JSON schema has been used to define database model, while the same schema is used to generate seed data. I also embedded the JSON schema on the API documentation because the documentation library also understands how to deal with JSON schema standard.&lt;/p&gt;
+
+&lt;p&gt;I was able to feed a single file to three different module of the project because all of them understood the standard.&lt;/p&gt;
+</description>
+    </item>
+    
+    <item>
+      <title>Keyboarding: Dvorak and Vim</title>
+      <link>http://afm-sayem.com/post/dvorak-and-vim/</link>
+      <pubDate>Sat, 12 Mar 2016 04:05:25 -0600</pubDate>
+      
+      <guid>http://afm-sayem.com/post/dvorak-and-vim/</guid>
+      <description>&lt;p&gt;Around late 2012, I suffered a shoulder injury while playing badminton that later turned into chronic pain. Several physiotherapy sessions resulted in improvements but I was not able to sit before a computer for prolonged sessions.&lt;/p&gt;
+
+&lt;p&gt;I was reading up on ergonomic keyboards, sitting arrangements and posture all day to find something that would relieve me off the pain. I bought a better keyboard. Taught myself how to sit in a better posture.&lt;/p&gt;
+
+&lt;p&gt;I also became aware of RSI at that time. I discovered how common it was among programmers in general.&lt;/p&gt;
+
+&lt;p&gt;After much studying, I decided to teach myself Dvorak.&lt;/p&gt;
+
+&lt;p&gt;Switching keyboard layout was one of the hardest things I had to teach myself. The first few days, my head and hands were in constant battle. It&amp;rsquo;s difficult to change habits. It&amp;rsquo;s way harder if the habit had turned into instinct. QWERTY had become a part of my instinct.&lt;/p&gt;
+
+&lt;p&gt;After a painful couple of months, I was at my regular speed. Now it&amp;rsquo;s been a couple of years and while it&amp;rsquo;s a matter of opinion, I think Dvorak is much comfortable to type on than QWERTY.&lt;/p&gt;
+
+&lt;p&gt;In the beginning of 2014, I wanted to try a better editor. Around that time text editor churn was extremely fast. We had Brackets from Adobe, Atom from Github, Lighttable, Sublime Text and a new one coming everyday. What could be a tool that I can keep using for next 20 years? The common answers on online forums were two, Vim or Emacs. I went with Vim because I liked it&amp;rsquo;s idea of modal editing.&lt;/p&gt;
+
+&lt;p&gt;Learning Vim took some patience. I tried several times but had to switch back to Sublime Text because the productivity drop was noticeable. Vim&amp;rsquo;s layout is such that it&amp;rsquo;s made for QWERTY typists. &amp;ldquo;hjkl&amp;rdquo; is used for navigation. But luckily, Dvorak&amp;rsquo;s layout works surprisingly well with Vim. In QWERTY, you have to navigate using one hand but in Dvorak, you&amp;rsquo;ll be using both of your hands to navigate which is much better and intuitive. The keys are also in very sensible positions.&lt;/p&gt;
+
+&lt;p&gt;After using using Vim for a year, I understand why there&amp;rsquo;s so much talk around it. It&amp;rsquo;s an editor unlike any other. I think a lot of software design could benefit from the principles of Vim, to let the users express themselves and trust them with more power.&lt;/p&gt;
+
+&lt;p&gt;If you haven&amp;rsquo;t taught yourself how to type yet, you need to know the &lt;a href=&#34;http://steve-yegge.blogspot.com/2008/09/programmings-dirtiest-little-secret.html&#34;&gt;programming&amp;rsquo;s dirty little secret&lt;/a&gt;.&lt;/p&gt;
+</description>
+    </item>
+    
+  </channel>
+</rss>
