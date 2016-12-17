@@ -11,7 +11,7 @@ googleAnalytics = ""
 [params]
 	name = "Sayem's Rants"
 	description = "Discussions about programming"
-	# bio = "Constant Fidgeting"
+	bio = "Constant Fidgeting"
 	# Enter optionally your twitter account
 	twitter = "Your Twitter account"
 	enableRSS = true
