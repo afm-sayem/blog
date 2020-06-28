@@ -1,5 +1,5 @@
 # Site settings
-baseurl = "http://afm-sayem.com/"
+baseurl = "https://sayem.page/"
 languageCode = "en-us"
 title = "Sayem's Rants"
 theme = "hugo-cactus-theme"
