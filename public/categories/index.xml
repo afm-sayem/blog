@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Categories on Sayem&#39;s Rants</title>
-    <link>https://sayem.page/categories/</link>
-    <description>Recent content in Categories on Sayem&#39;s Rants</description>
+    <title>Categories on Rants</title>
+    <link>http://localhost:1313/categories/</link>
+    <description>Recent content in Categories on Rants</description>
     <generator>Hugo</generator>
     <language>en-us</language>
-    <atom:link href="https://sayem.page/categories/index.xml" rel="self" type="application/rss+xml" />
+    <copyright>sayem</copyright>
+    <atom:link href="http://localhost:1313/categories/index.xml" rel="self" type="application/rss+xml" />
   </channel>
 </rss>

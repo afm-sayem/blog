@@ -1,61 +1,62 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Sayem&#39;s Rants</title>
-    <link>https://sayem.page/</link>
-    <description>Recent content on Sayem&#39;s Rants</description>
+    <title>Rants</title>
+    <link>http://localhost:1313/</link>
+    <description>Recent content on Rants</description>
     <generator>Hugo</generator>
     <language>en-us</language>
+    <copyright>sayem</copyright>
     <lastBuildDate>Thu, 11 Nov 2021 04:03:46 -0600</lastBuildDate>
-    <atom:link href="https://sayem.page/index.xml" rel="self" type="application/rss+xml" />
+    <atom:link href="http://localhost:1313/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Seeing the Matrix</title>
-      <link>https://sayem.page/content/post/seeing-the-matrix/</link>
+      <link>http://localhost:1313/content/post/seeing-the-matrix/</link>
       <pubDate>Thu, 11 Nov 2021 04:03:46 -0600</pubDate>
-      <guid>https://sayem.page/content/post/seeing-the-matrix/</guid>
+      <guid>http://localhost:1313/content/post/seeing-the-matrix/</guid>
       <description>The sole reason I was interested in comp sci is because of the movie Matrix. I think I watched the first part over 50 times in my life. In my cadet college days, I used to spend hours theory crafting with Imran about the nature of Matrix and fantasizing about what would happen if we were all in a simulation.&#xA;I was fascinated by Neo, the protagonist. He was a god inside the Matrix.</description>
     </item>
     <item>
       <title>Write APIs that speak</title>
-      <link>https://sayem.page/content/post/write-apis-that-speak/</link>
+      <link>http://localhost:1313/content/post/write-apis-that-speak/</link>
       <pubDate>Sun, 02 Oct 2016 17:09:14 -0500</pubDate>
-      <guid>https://sayem.page/content/post/write-apis-that-speak/</guid>
+      <guid>http://localhost:1313/content/post/write-apis-that-speak/</guid>
       <description>For the past few years, I have written quite a few RESTful APIs from scratch and have had a few epiphanies since. I&amp;rsquo;ll try to give a summary of what I learned.&#xA;It&amp;rsquo;s impossible to discuss web APIs without mentioning the new contender, GraphQL. I don&amp;rsquo;t believe the criticisms on REST by GraphQL proponents are just, though. REST is more unopinionated than GraphQL since it only prescribes the method of data and does not dictate how the communication must happen.</description>
     </item>
     <item>
       <title>Setup Bourbon with Aurelia</title>
-      <link>https://sayem.page/content/post/setup-bourbon-with-aurelia/</link>
+      <link>http://localhost:1313/content/post/setup-bourbon-with-aurelia/</link>
       <pubDate>Sat, 20 Aug 2016 04:03:46 -0600</pubDate>
-      <guid>https://sayem.page/content/post/setup-bourbon-with-aurelia/</guid>
+      <guid>http://localhost:1313/content/post/setup-bourbon-with-aurelia/</guid>
       <description>I ♥ Bourbon. I ♥ Aurelia.&#xA;To use Bourbon with Aurelia, we will first create a project with aurelia-cli. Use SCSS as the preprocessor when the project asks for configuration values.&#xA;Done? Now let&amp;rsquo;s install bourbon and neat from npm.&#xA;npm install bourbon bourbon-neat --save&#xA;Go to the aurelia_project/tasks directory and open up process-css.js and add these lines&#xA;import bourbon from &amp;#39;bourbon&amp;#39;; import neat from &amp;#39;bourbon-neat&amp;#39;; Modify the .pipe(sass().on(&#39;error&#39;, sass.logError)) line to the following:</description>
     </item>
     <item>
       <title>Enforce Better Commit Messages</title>
-      <link>https://sayem.page/content/post/enforce-commit-message-convention/</link>
+      <link>http://localhost:1313/content/post/enforce-commit-message-convention/</link>
       <pubDate>Tue, 12 Jul 2016 04:05:25 -0600</pubDate>
-      <guid>https://sayem.page/content/post/enforce-commit-message-convention/</guid>
+      <guid>http://localhost:1313/content/post/enforce-commit-message-convention/</guid>
       <description>&amp;ldquo;minor fix&amp;rdquo; - Lucifer&#xA;One of the common feedbacks I used to get during my early days of software development was how to communicate my changes with my colleagues with good commit messages. There&amp;rsquo;s no rule out there on how to write a commit message, but there are quite a few conventions out there. Some prefer writing the changes in the past tense, some in the present tense. Some mention the ticket number in their commit message, some avoid doing that and instead stick to the scope of the changes.</description>
     </item>
     <item>
       <title>Standards</title>
-      <link>https://sayem.page/content/post/standards/</link>
+      <link>http://localhost:1313/content/post/standards/</link>
       <pubDate>Tue, 21 Jun 2016 04:03:46 -0600</pubDate>
-      <guid>https://sayem.page/content/post/standards/</guid>
+      <guid>http://localhost:1313/content/post/standards/</guid>
       <description>Standards are beautiful. Standards let us build on top of each other without worrying too much about details underneath. The biggest example of standard is probably human language, how we all agreed to make specific sounds so that we&amp;rsquo;ll be able to express ourselves to each other.&#xA;I like to think in standards. Whenever I&amp;rsquo;m creating something, I worry a lot thinking how can someone else leverage the work that I&amp;rsquo;m working.</description>
     </item>
     <item>
       <title>Keyboarding: Dvorak and Vim</title>
-      <link>https://sayem.page/content/post/dvorak-and-vim/</link>
+      <link>http://localhost:1313/content/post/dvorak-and-vim/</link>
       <pubDate>Sat, 12 Mar 2016 04:05:25 -0600</pubDate>
-      <guid>https://sayem.page/content/post/dvorak-and-vim/</guid>
+      <guid>http://localhost:1313/content/post/dvorak-and-vim/</guid>
       <description>Around late 2012, I suffered a shoulder injury while playing badminton that later turned into chronic pain. Several physiotherapy sessions resulted in improvements but I was not able to sit before a computer for prolonged sessions.&#xA;I was reading up on ergonomic keyboards, sitting arrangements, and posture all day to find something that would relieve me of the pain. I bought a better keyboard. Taught myself how to sit in a better posture.</description>
     </item>
     <item>
       <title>About</title>
-      <link>https://sayem.page/content/about/</link>
+      <link>http://localhost:1313/content/about/</link>
       <pubDate>Sat, 20 Jun 2015 14:02:37 +0200</pubDate>
-      <guid>https://sayem.page/content/about/</guid>
-      <description>Programmer based in Dhaka, Bangladesh.&#xA;I found Inifum in 2015 and since has launched Chakrav and Onushshar.&#xA;Contact Reach me at sayem@chakrav.com</description>
+      <guid>http://localhost:1313/content/about/</guid>
+      <description>Programmer based in Singapore. Built a couple of companies and always looking to help build the next one.</description>
     </item>
   </channel>
 </rss>
