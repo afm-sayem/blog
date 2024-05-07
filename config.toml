@@ -1,0 +1,51 @@
+# Site settings
+baseurl = "https://sayem.page/"
+languageCode = "en-us"
+title = "Sayem's Rants"
+theme = "cactus"
+# Enter your tracking code to enable Google Analytics
+googleAnalytics = ""
+# Disable comments by leaving disqusShortname empty
+# disqusShortname = "spf13"
+
+[params]
+	name = "Sayem's Rants"
+	description = ""
+	bio = "Constant Fidgeting"
+	# Enter optionally your twitter account
+	twitter = "Your Twitter account"
+	enableRSS = true
+
+	# Add custom assets with their paths relative to the static folder
+	customCSS = []
+	customJS  = []
+
+	# The variables below are optionally too and can be used to
+	# translate or customize each string of the theme.
+
+	# Navigation links
+	home = ""
+	about = "/about"
+	subscribe = ""
+	# Pagination links
+	olderPosts = ""
+	newerPosts = ""
+	readMore = ""
+	copyright = "© AFM Sayem"
+	# Sharing options and author information in posts
+	aboutAuthor = "I'm an enthusiastic gopher."
+	tweet = ""
+	share = ""
+	# 404 page
+	title404 = "Oops"
+	subtitle404 = ""
+
+	# Choose a font for the social icons in the footer. Either "mono-social" or "font-awesome"
+	iconFont = "font-awesome"
+    # The social icons can be styled differently if you use mono as font - circle, rounded, or empty
+    socialIconStyle = "circle"
+
+# Add additional social link entries underneath
+[social]
+    soundcloud  = "https://www.soundcloud.com/honkhonk"
+    github   = "https://www.github.com/afm-sayem"

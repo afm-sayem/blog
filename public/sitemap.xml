@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+  xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://sayem.page/content/</loc>
+    <lastmod>2021-11-11T04:03:46-06:00</lastmod>
+  </url><url>
+    <loc>https://sayem.page/</loc>
+    <lastmod>2021-11-11T04:03:46-06:00</lastmod>
+  </url><url>
+    <loc>https://sayem.page/content/post/seeing-the-matrix/</loc>
+    <lastmod>2021-11-11T04:03:46-06:00</lastmod>
+  </url><url>
+    <loc>https://sayem.page/content/post/write-apis-that-speak/</loc>
+    <lastmod>2016-10-02T17:09:14-05:00</lastmod>
+  </url><url>
+    <loc>https://sayem.page/content/post/setup-bourbon-with-aurelia/</loc>
+    <lastmod>2016-08-20T04:03:46-06:00</lastmod>
+  </url><url>
+    <loc>https://sayem.page/content/post/enforce-commit-message-convention/</loc>
+    <lastmod>2016-07-12T04:05:25-06:00</lastmod>
+  </url><url>
+    <loc>https://sayem.page/content/post/standards/</loc>
+    <lastmod>2016-06-21T04:03:46-06:00</lastmod>
+  </url><url>
+    <loc>https://sayem.page/content/post/dvorak-and-vim/</loc>
+    <lastmod>2016-03-12T04:05:25-06:00</lastmod>
+  </url><url>
+    <loc>https://sayem.page/content/about/</loc>
+    <lastmod>2015-06-20T14:02:37+02:00</lastmod>
+  </url><url>
+    <loc>https://sayem.page/categories/</loc>
+  </url><url>
+    <loc>https://sayem.page/tags/</loc>
+  </url>
+</urlset>
